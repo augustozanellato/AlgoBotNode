@@ -2,7 +2,6 @@ require('dotenv').config();
 const Discord = require('discord.js');
 const bot = new Discord.Client();
 const TOKEN = process.env.TOKEN;
-console.log(process.env.TOKEN)
 
 
 bot.on('ready', () => {
@@ -15,5 +14,6 @@ bot.on("message", message => {
         message.channel.send(number.toString()); //
     }
 });
-
+//test: potete modificare?
+//provo a modificare by @Daniele4ciocchi nice
 bot.login(TOKEN);
