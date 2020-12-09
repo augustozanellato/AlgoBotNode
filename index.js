@@ -18,3 +18,4 @@ bot.on("message", message => {
 //provo a modificare by @Daniele4ciocchi nice
 bot.login(TOKEN);
 // Pippo Puppo
+//testing roba
