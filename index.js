@@ -17,3 +17,4 @@ bot.on("message", message => {
 //test: potete modificare?
 //provo a modificare by @Daniele4ciocchi nice
 bot.login(TOKEN);
+// Pippo Puppo
