@@ -38,12 +38,12 @@ bot.on('message', async message => {
   const args = message.content.slice(prefix.length).trim().split(/ +/);
 	const command = args.shift().toLowerCase();
 
-	if (message.content === 'random') {
+	if (co === 'random') {
 		const number = 0 + Math.floor(Math.random() * (1000 - 0 + 1));
 		message.channel.send(number.toString()); 
 	}
 
-  if (message.content === 'bella') {
+  if (command === 'bella') {
     message.channel.send("bella " + "<@" + message.author.id + ">");
 	}
 
