@@ -34,16 +34,20 @@ bot.on('message', async message => {
   // se il messaggio non iniza con il tuo prefix
   if(!message.content.startsWith(prefix)) return;
 
-	if (message.content ===  prefix + 'random') {
+  // tolgo il prefix e metto il messaggio in LowerCase
+  const args = message.content.slice(prefix.length).trim().split(/ +/);
+	const command = args.shift().toLowerCase();
+
+	if (message.content === 'random') {
 		const number = 0 + Math.floor(Math.random() * (1000 - 0 + 1));
 		message.channel.send(number.toString()); 
 	}
 
-  if (message.content === prefix + 'bella') {
+  if (message.content === 'bella') {
     message.channel.send("bella " + "<@" + message.author.id + ">");
 	}
 
-  if(command === prefix + "ping"){
+  if(command === "ping"){
     // Calculates ping between sending a message and editing it, giving a nice round-trip latency.
     // The second ping is an average latency between the bot and the websocket server (one-way, not round-trip)
     const m = await message.channel.send("Ping?");
