@@ -38,7 +38,7 @@ bot.on('message', async message => {
   const args = message.content.slice(prefix.length).trim().split(/ +/);
 	const command = args.shift().toLowerCase();
 
-	if (co === 'random') {
+	if (command === 'random') {
 		const number = 0 + Math.floor(Math.random() * (1000 - 0 + 1));
 		message.channel.send(number.toString()); 
 	}
