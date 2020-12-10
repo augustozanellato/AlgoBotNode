@@ -23,7 +23,7 @@ bot.on('ready', () => {
 	console.log(`Bot has started, with ${num_users} users, in ${bot.guilds.cache.size} guilds.`);
   
   // set status di quanti server attivi con utenti
-	bot.user.setActivity(`. | Serving ${bot.guilds.chace.size} servers and ${num_users} users`);
+	bot.user.setActivity(`. | Serving ${bot.guilds.cache.size} servers and ${num_users} users`);
 });
 
 
@@ -50,7 +50,7 @@ bot.on('message', async message => {
     const m = await message.channel.send("Ping?");
     m.edit(`Pong! Latency is ${m.createdTimestamp - message.createdTimestamp}ms. API Latency is ${Math.round(bot.ping)}ms`);
   }
-  
+
 });
 
 
