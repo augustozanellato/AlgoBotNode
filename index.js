@@ -21,7 +21,6 @@ bot.on('ready', () => {
   var num_users = bot.guilds.cache.reduce((a, g) => a + g.memberCount, 0);
 
 	console.log(`Bot has started, with ${num_users} users, in ${bot.guilds.cache.size} guilds.`);
-  
   // set status di quanti server attivi con utenti
 	bot.user.setActivity(`. | Serving ${bot.guilds.cache.size} servers and ${num_users} users`);
 });
