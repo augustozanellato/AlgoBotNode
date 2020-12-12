@@ -1,101 +1,130 @@
-// keep alive the bot //
+const { Client, MessageEmbed } = require('discord.js');
+const config = require("./config.json");
+const prefix = config.prefix;
+const commands = require('./help');
+
+let bot = new Client();
+
+bot.once('ready', () => 
+{
+    	console.log(`Logged in as ${bot.user.tag}.`);
+		var num_users = bot.guilds.cache.reduce((a, g) => a + g.memberCount, 0);
+
+	    console.log(`Bot has started, with ${num_users} users, in ${bot.guilds.cache.size} guilds.`);
+
+		// set status di quanti server attivi con utenti
+    	bot.user.setActivity(`${prefix}help | Serving ${bot.guilds.cache.size} servers`, {type: 'LISTENING'});
+});
+
+bot.on('message', async message => 
+{
+  // Check for command
+	if (!message.content.startsWith(prefix) || message.author.bot) return;
+	
+    let args = message.content.slice(prefix.length).split(' ');
+    let command = args.shift().toLowerCase();
+
+	switch (command) 
+	{
+
+		case 'ping':
+			const msg = await message.channel.send('Ping?');
+			msg.edit(`Pong! Latency is ${m.createdTimestamp -message.createdTimestamp}ms. API Latency is ${Math.round(bot.ws.ping)}ms`);
+			break
+
+		case 'say':
+		case 'repeat':
+			if (args.length > 0)
+				message.channel.send(args.join(' '));
+			else
+				message.reply('You did not send a message to repeat, cancelling command.');
+			break
+		
+		case 'random':
+			if (args.length > 1)
+				message.reply('Too many arguments, cancelling command.');
+			else if (args.length > 0)
+			{
+				if(parseInt(args[0]) > 1)
+				{
+					console.log(1 + Math.floor(Math.random() * parseInt(args[0])));
+					message.channel.send(`\`\`\`${1 + Math.floor(Math.random() * parseInt(args[0]))}\`\`\``);
+				}
+				else
+					message.reply('You did set an incorrect value for the interval, cancelling command.');			
+			}
+			else
+				message.reply('You did not set the value of the interval, cancelling command.');
+			break
+
+		case 'bella':
+			message.channel.send(`bella <@${message.author.id}>`);
+			break
+
+		case 'help':
+			let embed =  new MessageEmbed()
+				.setTitle('AlgoBot')
+				.setColor('#7fe5f0')
+				.setFooter(`Requested by: ${message.member ? message.member.displayName : message.author.username}`, message.author.displayAvatarURL())
+			
+			if (!args[0])
+				embed
+				.setDescription(Object.keys(commands).map(command => `\`${command.padEnd(Object.keys(commands).reduce((a, b) => b.length > a.length ? b : a, '').length)}\` :: ${commands[command].description}`).join('\n'));
+			else 
+			{
+				if ( Object.keys(commands).includes(args[0].toLowerCase()) || Object.keys(commands).map(c => commands[c].aliases || []).flat().includes(args[0].toLowerCase()))
+				{
+					let command = Object.keys(commands).includes(args[0].toLowerCase())? args[0].toLowerCase() : Object.keys(commands).find(c => commands[c].aliases && commands[c].aliases.includes(args[0].toLowerCase()));
+					embed
+						.setTitle(`COMMAND - ${command}`)
+
+					if (commands[command].aliases)
+						embed.addField('Command aliases', `\`${commands[command].aliases.join('`, `')}\``);
+					embed
+						.addField('DESCRIPTION', commands[command].description)
+						.addField('FORMAT', `\`\`\`${prefix}${commands[command].format}\`\`\``);
+				}
+				else 
+				{
+					embed
+						.setColor('RED')
+						.setDescription('This command does not exist. Please use the help command without specifying any commands to list them all.');
+				}
+			}
+			message.channel.send(embed);
+		break;
+
+	}
+	
+});
+
+
+bot.on("guildCreate", guild => 
+{
+	// This event triggers when the bot joins a guild.
+	console.log(`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${guild.memberCount} members!`);
+	bot.user.setActivity(`${prefix}help | Serving ${bot.guilds.cache.size} servers`, {type: 'LISTENING'});
+});
+  
+bot.on("guildDelete", guild => 
+{
+	// this event triggers when the bot is removed from a guild.
+	console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
+	bot.user.setActivity(`${prefix}help | Serving ${bot.guilds.cache.size} servers`, {type: 'LISTENING'});
+ });
+  
+
+
 const express = require('express');
+
 const app = express();
 const port = 3000;
 
-app.get('/', (req, res) => res.send('Hello World!'));
+app.get('/', (req, res) => res.send('The Discord bot is down!'));
 app.listen(port, () =>
-	console.log(`Example app listening at http://localhost:${port}`)
+	console.log(`App listening at http://localhost:${port}`)
 );
-const keep_alive = require('./keep_alive.js');
-// keep alive the bot //
 
-// start bot
-require('dotenv').config();
-const Discord = require('discord.js');
-const bot = new Discord.Client();
-const TOKEN = process.env.TOKEN;
-const prefix = '.';
+require('./server');
 
-bot.on('ready', () => {
-	console.info(`Logged in as ${bot.user.tag}!`);
-
-	var num_users = bot.guilds.cache.reduce((a, g) => a + g.memberCount, 0);
-
-	console.log(
-		`Bot has started, with ${num_users} users, in ${
-			bot.guilds.cache.size
-		} guilds.`
-	);
-	// set status di quanti server attivi con utenti
-	bot.user.setActivity(
-		`. | Serving ${bot.guilds.cache.size} servers and ${num_users} users`
-	);
-});
-
-bot.on('message', async message => {
-	// se il messaggio lo scrive un bot
-	if (message.author.bot) return;
-
-	// se il messaggio non iniza con il tuo prefix
-	if (!message.content.startsWith(prefix)) return;
-
-	// tolgo il prefix e metto il messaggio in LowerCase
-	const args = message.content
-		.slice(prefix.length)
-		.trim()
-		.split(/ +/);
-    
-	const command = args.shift().toLowerCase();
-  //random command
-	if (command === 'random') {
-    var parameter;
-    try {
-      parameter =  parseInt(args.shift().toLowerCase());
-    } catch (error) {
-      parameter = 1000;
-    }
-    
-		const number = 1 + Math.floor(Math.random() * (parameter));
-    console.log(parameter.toString() );
-		message.channel.send(number.toString() );
-	}
-
-	if (command === 'bella') {
-		message.channel.send('bella ' + '<@' + message.author.id + '>');
-	}
-
-	if (command === 'ping') {
-		// Calculates ping between sending a message and editing it, giving a nice round-trip latency.
-		// The second ping is an average latency between the bot and the websocket server (one-way, not round-trip)
-		const m = await message.channel.send('Ping?');
-		m.edit(
-			`Pong! Latency is ${m.createdTimestamp -
-				message.createdTimestamp}ms. API Latency is ${Math.round(
-				bot.ws.ping
-			)}ms`
-		);
-	}
-});
-
-// server add/remove update
-
-bot.on('guildCreate', guild => {
-	// sengalazione quando viene aggiunto da un server
-	console.log(
-		`New guild joined: ${guild.name} (id: ${guild.id}). This guild has ${
-			guild.memberCount
-		} members!`
-	);
-	bot.user.setActivity(`Serving ${bot.guilds.size} servers`);
-});
-
-bot.on('guildDelete', guild => {
-	// sengalazione quando viene rimosso da un server
-	console.log(`I have been removed from: ${guild.name} (id: ${guild.id})`);
-	bot.user.setActivity(`Serving ${bot.guilds.size} servers`);
-});
-
-// fine server add/remove update
-
-bot.login(TOKEN);
+bot.login(process.env.TOKEN);
