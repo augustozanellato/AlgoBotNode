@@ -152,13 +152,20 @@ bot.login(process.env.TOKEN);
 
 
 
-function draw(expression ,id) {
+function draw(expression, id) {
     try {
       
       const expr = math.compile(expression)
-
+      /* TWEAK HERE */
+      const range = 20 // plot from -range/2 to range/2
+      const step = 0.1
+      /* END TWEAK */
+      const endX = range/2
+      const startX = -endX
+      const steps = Math.abs(endX - startX) / step
       // evaluate the expression repeatedly for different values of x
-      const xValues = math.range(-10, 10, 0.1).toArray()
+      const xValues = math.range(startX, endX, step).toArray()
+      xValues.splice(Math.round(steps/2), 1, 0)
       const yValues = xValues.map(function (x) {
         return expr.evaluate({x: x})
       })
