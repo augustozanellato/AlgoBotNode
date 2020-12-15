@@ -1,7 +1,10 @@
-const { Client, MessageEmbed } = require('discord.js');
+const { Client, MessageEmbed, MessageAttachment } = require('discord.js');
 const config = require("./config.json");
 const prefix = config.prefix;
 const commands = require('./help');
+const plotly = require('plotly')(process.env.URSERNAME, process.env.API_KEY);
+const math = require('mathjs');
+var fs = require('fs');
 
 let bot = new Client();
 
@@ -15,6 +18,7 @@ bot.once('ready', () =>
 		// set status di quanti server attivi con utenti
     	bot.user.setActivity(`${prefix}help | Serving ${bot.guilds.cache.size} servers`, {type: 'LISTENING'});
 });
+
 
 bot.on('message', async message => 
 {
@@ -40,6 +44,23 @@ bot.on('message', async message =>
 				message.reply('You did not send a message to repeat, cancelling command.');
 			break
 		
+		case 'graph':
+			console.log(message.id);
+			var func = args.join(' ');
+			console.log(func);
+			
+			draw(func ,message.id);
+
+			const path = `${message.id}.png`;
+
+			setTimeout(function x(){
+				var attachment = new MessageAttachment(path);
+				message.channel.send("", attachment);
+			}, 1000);
+
+			break;
+
+
 		case 'random':
 			if (args.length > 1)
 				message.reply('Too many arguments, cancelling command.');
@@ -128,3 +149,46 @@ app.listen(port, () =>
 require('./server');
 
 bot.login(process.env.TOKEN);
+
+
+
+function draw(expression ,id) {
+    try {
+      
+      const expr = math.compile(expression)
+
+      // evaluate the expression repeatedly for different values of x
+      const xValues = math.range(-10, 10, 0.1).toArray()
+      const yValues = xValues.map(function (x) {
+        return expr.evaluate({x: x})
+      })
+
+      // render the plot using plotly
+      const trace1 = {
+        x: xValues,
+        y: yValues,
+        type: 'scatter'
+      }
+
+      var figure = { 'data': [trace1] };
+
+      var imgOpts = {
+          format: 'png',
+          width: 1000,
+          height: 500
+      };
+      
+      plotly.getImage(figure, imgOpts, function (error, imageStream) {
+          if (error) return console.log (error);
+          var fileStream = fs.createWriteStream(`${id}.png`);
+          imageStream.pipe(fileStream);
+          
+
+      });
+    }
+    catch (err) {
+            console.error(err)
+      }
+}
+
+
