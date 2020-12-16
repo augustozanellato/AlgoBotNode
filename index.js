@@ -1,6 +1,7 @@
 const { Client, MessageEmbed, MessageAttachment } = require('discord.js');
 const config = require("./config.json");
 const prefix = config.prefix;
+require('dotenv').config();
 const commands = require('./help');
 const plotly = require('plotly')(process.env.URSERNAME, process.env.API_KEY);
 const math = require('mathjs');
