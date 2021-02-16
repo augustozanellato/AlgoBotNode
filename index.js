@@ -118,3 +118,53 @@ bot.login(process.env.TOKEN);
 
 
 
+<<<<<<< HEAD
+=======
+function draw(expression, id) {
+    try {
+      
+      const expr = math.compile(expression)
+      /* TWEAK HERE */
+      const range = 20 // plot from -range/2 to range/2
+      const step = 0.1
+      /* END TWEAK */
+      const endX = range/2
+      const startX = -endX
+      const steps = Math.abs(endX - startX) / step
+      // evaluate the expression repeatedly for different values of x
+      const xValues = math.range(startX, endX, step).toArray()
+      xValues.splice(Math.round(steps/2), 1, 0)
+      const yValues = xValues.map(function (x) {
+        return expr.evaluate({x: x})
+      })
+
+      // render the plot using plotly
+      const trace1 = {
+        x: xValues,
+        y: yValues,
+        type: 'scatter'
+      }
+
+      var figure = { 'data': [trace1] };
+
+      var imgOpts = {
+          format: 'png',
+          width: 1000,
+          height: 500
+      };
+      
+      plotly.getImage(figure, imgOpts, function (error, imageStream) {
+          if (error) return console.log (error);
+          var fileStream = fs.createWriteStream(`${id}.png`);
+          imageStream.pipe(fileStream);
+          
+
+      });
+    }
+    catch (err) {
+            console.error(err)
+      }
+}
+
+
+>>>>>>> 295962eb5e363be8bb28f517d6ad196636ee0a94
