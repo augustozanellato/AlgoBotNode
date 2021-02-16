@@ -114,7 +114,6 @@ app.listen(port, () =>
 
 require('./server');
 
-// bot.login('Nzg2MTkxNjI0MzQ1ODc4NTI4.X9C0AQ.gl-XtcxOLtF-hE4HX8mFLHB5TfU');
 bot.login(process.env.TOKEN);
 
 
