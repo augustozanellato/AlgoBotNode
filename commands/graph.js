@@ -3,10 +3,10 @@ module.exports = {
     aliases: ['plot'],
     description: 'Generate a plot image of a given function.',
     usage: 'graph <value>',
-    execute(message, args){
-        
+    execute(message, args) {
+
         require('dotenv').config("../.env");
-        
+
         const { MessageAttachment } = require('discord.js');
 
         const fs = require('fs');
@@ -20,18 +20,20 @@ module.exports = {
 
                 // evaluate the expression repeatedly for different values of x
                 /* TWEAK HERE */
-                const range = 20;// plot from -range/2 to range/2
+                const range = 20; // plot from -range/2 to range/2
                 const step = 0.01;
                 /* END TWEAK */
-                const endX = range/2;
+                const endX = range / 2;
                 const startX = -endX;
                 const steps = Math.abs(endX - startX) / step;
                 // evaluate the expression repeatedly for different values of x
                 const xValues = math.range(startX, endX, step).toArray();
-                xValues.splice(Math.round(steps/2), 1, 0);
+                xValues.splice(Math.round(steps / 2), 1, 0);
 
                 const yValues = xValues.map(function (equation) {
-                    return expr.evaluate({x: equation});
+                    return expr.evaluate({
+                        x: equation
+                    });
                 })
 
                 // render the plot using plotly
@@ -58,7 +60,7 @@ module.exports = {
 
 
                 });
-                
+
             } catch (err) {
                 message.channel.send('Something went wrong');
                 console.error(err);
@@ -74,11 +76,13 @@ module.exports = {
         setTimeout(function x() {
             var attachment = new MessageAttachment(path);
             message.channel.send("", attachment);
-            setTimeout(function f(){fs.unlink(path, function (err) {
-                if (err) throw err;
-                // if no error, file has been deleted successfully
-                console.log('File deleted!');
-            })}, 1500);
+            setTimeout(function f() {
+                fs.unlink(path, function (err) {
+                    if (err) throw err;
+                    // if no error, file has been deleted successfully
+                    console.log('File deleted!');
+                })
+            }, 1000);
 
         }, 2000);
 

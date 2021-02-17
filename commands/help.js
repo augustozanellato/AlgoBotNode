@@ -38,12 +38,6 @@ module.exports = {
                 .addField('usage', `\`\`\`${prefix}${command.usage}\`\`\` \n`);
         });
         
-        // else {
-        //     embed
-        //         .setColor('RED')
-        //         .setDescription('This command does not exist. Please use the help command without specifying any commands to list them all.');
-        // }
-        
         message.channel.send(embed);
     }
 }

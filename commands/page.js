@@ -13,7 +13,7 @@ module.exports = {
             const current = test.slice(start, start + ItemsOnEmbed)
             const embed = new MessageEmbed()
                 .setTitle(`Testing`)
-                .setFooter(`Page ${ Math.floor(start / ItemsOnEmbed) + 1} / ${ Math.floor(test.length / ItemsOnEmbed) + 1 }`)
+                .setFooter(`Page ${ Math.floor(start / ItemsOnEmbed) + 1} / ${ Math.floor(test.length / ItemsOnEmbed) }`)
                 current.forEach(g => embed.addField("test", g))
             return embed
         }

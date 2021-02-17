@@ -22,7 +22,7 @@ const { prefix } = require("./config.json");
 
 
 bot.once('ready', () => {
-	
+
 	console.log(`Logged in as ${bot.user.tag}.`);
 	var num_users = bot.guilds.cache.reduce((a, g) => a + g.memberCount, 0);
 
@@ -39,10 +39,10 @@ bot.on('message', async message => {
 	// Check mention
 
 	if (message.mentions.users.has(bot.user.id) && !message.author.bot) {
-		message.reply(`my prefix here is ${prefix}`)
+		message.reply(`my prefix here is \"${prefix}\" `)
 		return;
 	};
-	
+
 	// Check for command
 
 	if (!message.content.startsWith(prefix) || message.author.bot) return;
@@ -56,31 +56,28 @@ bot.on('message', async message => {
 	}
 	// console.log(bot.commands);
 	const command = bot.commands.get(commandName) || bot.commands.find(c => c.aliases && c.aliases.includes(commandName));
-	
+
 	// If a get a help command i need to get all the names,description of all the modules
 
-	if(commandName == 'help'){
-		if(args[0]){
+	if (commandName == 'help') {
+		if (args[0]) {
 			const command_help = args.shift().toLowerCase();
 			args[0] = bot.commands.get(command_help) || bot.commands.find(c => c.aliases && c.aliases.includes(command_help));
 
-			if(!args[0])
+			if (!args[0])
 				return message.reply("Invalid argument");
-			
-			console.log(args);
+
+			// console.log(args);
 			command.execute(message, args);
-		}
-		else{
+		} else {
 			args = [];
 			args = [...bot.commands].map(([name, value]) => ({ value }));
-
 			command.execute(message, args);
 		}
 		return;
 	}
-	
 	command.execute(message, args);
-	
+
 });
 
 
@@ -101,6 +98,9 @@ bot.on("guildDelete", guild => {
 });
 
 
+bot.on("error", (e) => console.error(e));
+bot.on("warn", (e) => console.warn(e));
+bot.on("debug", (e) => console.info(e));
 
 const express = require('express');
 
