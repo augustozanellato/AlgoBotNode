@@ -49,14 +49,19 @@ bot.on('message', async message => {
 
 	var args = message.content.slice(prefix.length).trim().split(/ +/);
 	const commandName = args.shift().toLowerCase();
-
+	
+	//prevent spamming "Command not found" if only the prefix is sent
+	if (commandName.length == 0) {
+		return;
+	}
+	
 	if (!bot.commands.has(commandName) && !bot.commands.find(c => c.aliases && c.aliases.includes(commandName))) {
 		message.reply("Command not found");
 		return;
 	}
 	// console.log(bot.commands);
 	const command = bot.commands.get(commandName) || bot.commands.find(c => c.aliases && c.aliases.includes(commandName));
-
+	
 	// If a get a help command i need to get all the names,description of all the modules
 
 	if (commandName == 'help') {
